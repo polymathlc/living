@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Living Together — Polymath P6 Science</title>
+  <style>
+    /* ============================================================
+       POLYMATH DESIGN TOKENS — Science (Soft Blue)
+       ============================================================ */
+    :root {
+      /* Surfaces */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #FAFAFA;
+      --bg-tertiary: #F3F3F0;
+      --border-subtle: #E8E8E4;
+      --border-medium: #D4D4CF;
+
+      /* Text */
+      --text-primary: #1A1A1A;
+      --text-secondary: #5C5C5C;
+      --text-tertiary: #8A8A8A;
+      --text-inverse: #FFFFFF;
+
+      /* Science palette — blue */
+      --accent-light: #BBDEFB;
+      --accent-base: #64B5F6;
+      --accent-dark: #42A5F5;
+      --accent-bg: #E3F2FD;
+
+      /* Secondary palette for differentiation between habitats */
+      --garden-light: #C8E6C9;
+      --garden-base: #81C784;
+      --garden-bg: #F1F8E9;
+
+      --field-light: #FFF59D;
+      --field-base: #FFD54F;
+      --field-bg: #FFFDE7;
+
+      --tree-light: #A5D6A7;
+      --tree-base: #66BB6A;
+      --tree-bg: #E8F5E9;
+
+      --mangrove-light: #B0BEC5;
+      --mangrove-base: #78909C;
+      --mangrove-bg: #ECEFF1;
+
+      --pond-light: #80DEEA;
+      --pond-base: #26C6DA;
+      --pond-bg: #E0F7FA;
+
+      --sea-light: #FFE082;
+      --sea-base: #FFB74D;
+      --sea-bg: #FFF8E1;
+
+      /* Shadows */
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-md: 0 2px 4px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.08);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.1);
+      --shadow-button: 0 1px 2px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-button-hover: 0 2px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.12);
+
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 40px;
+      --space-2xl: 64px;
+
+      /* Radius */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 999px;
+
+      /* Typography */
+      --font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+      --font-size-xs: 0.75rem;
+      --font-size-sm: 0.875rem;
+      --font-size-base: 1rem;
+      --font-size-md: 1.125rem;
+      --font-size-lg: 1.5rem;
+      --font-size-xl: 2rem;
+      --font-size-2xl: 2.5rem;
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.6;
+
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.25s ease;
+      --transition-slow: 0.4s ease;
+    }
+
+    /* ============================================================
+       BASE RESET
+       ============================================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-family);
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      line-height: var(--line-height-normal);
+      min-height: 100vh;
+    }
+
+    img { max-width: 100%; display: block; }
+    input, button, select, textarea { font-family: inherit; }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .polymath-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .polymath-logo {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .print-btn {
+      position: absolute;
+      right: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-base);
+    }
+
+    .print-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-base);
+      background: var(--accent-bg);
+      box-shadow: var(--shadow-button);
+      transform: translateY(calc(-50% - 1px));
+    }
+
+    .print-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ============================================================
+       PAGE LAYOUT
+       ============================================================ */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+    }
+
+    .page-title {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+      text-align: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-size-md);
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .prose {
+      font-size: var(--font-size-md);
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: var(--space-xl);
+    }
+
+    .prose strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .prose em {
+      color: var(--accent-dark);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .term {
+      display: inline;
+      padding: 2px 6px;
+      background: var(--accent-bg);
+      color: var(--accent-dark);
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .takeaway {
+      max-width: 680px;
+      margin: var(--space-xl) auto;
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent-base);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+
+    .takeaway-label {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-dark);
+      margin-bottom: var(--space-sm);
+    }
+
+    .widget-block {
+      max-width: 860px;
+      margin: var(--space-xl) auto;
+      padding: var(--space-lg);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .widget-block-label {
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-dark);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .widget-block-label::before {
+      content: '✦';
+      font-size: 0.6rem;
+    }
+
+    .section-heading {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin: var(--space-2xl) auto var(--space-md);
+      letter-spacing: 0.01em;
+    }
+
+    .section-subheading {
+      font-size: var(--font-size-base);
+      font-weight: 400;
+      color: var(--text-tertiary);
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto var(--space-xl);
+    }
+
+    /* ============================================================
+       SYLLABUS OUTCOMES CARDS
+       ============================================================ */
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-md);
+      max-width: 860px;
+      margin: 0 auto var(--space-xl);
+    }
+
+    .outcome-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      box-shadow: var(--shadow-xs);
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .outcome-card:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--accent-light);
+      transform: translateY(-1px);
+    }
+
+    .outcome-key {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--font-size-sm);
+    }
+
+    .outcome-text {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       SECTION 1: ZOOM LEVELS (ORGANISM → POPULATION → COMMUNITY)
+       ============================================================ */
+    .zoom-widget {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .zoom-selector {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .zoom-btn {
+      padding: 10px 20px;
+      border: 1.5px solid var(--border-medium);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-family);
+    }
+
+    .zoom-btn:hover {
+      border-color: var(--accent-base);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .zoom-btn.active {
+      background: var(--accent-light);
+      border-color: var(--accent-base);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-button);
+    }
+
+    .zoom-stage {
+      min-height: 260px;
+      background: var(--accent-bg);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-slow);
+    }
+
+    .zoom-visual {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      max-width: 100%;
+      transition: all var(--transition-slow);
+    }
+
+    .zoom-emoji {
+      font-size: 4rem;
+      animation: zoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      transition: all var(--transition-base);
+    }
+
+    .zoom-emoji.small {
+      font-size: 2rem;
+    }
+
+    .zoom-emoji.tiny {
+      font-size: 1.25rem;
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.3); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .zoom-caption {
+      text-align: center;
+      margin-top: var(--space-lg);
+    }
+
+    .zoom-level-label {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-dark);
+      margin-bottom: var(--space-xs);
+    }
+
+    .zoom-definition {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       POPULATION COUNTER
+       ============================================================ */
+    .pop-counter-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+
+    .pop-counter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--space-md);
+    }
+
+    .pop-counter-title {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+    }
+
+    .pop-counter-value {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--accent-dark);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pop-counter-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 60px;
+      padding: var(--space-md);
+      background: var(--accent-bg);
+      border-radius: var(--radius-sm);
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .pop-emoji {
+      font-size: 1.5rem;
+      animation: zoomIn 0.3s ease both;
+    }
+
+    .pop-controls {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+    }
+
+    .stepper-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-medium);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .stepper-btn:hover {
+      background: var(--accent-light);
+      color: var(--text-primary);
+      border-color: var(--accent-base);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-button);
+    }
+
+    .stepper-btn:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-xs);
+    }
+
+    /* Population fact insight card */
+    .insight-card {
+      margin-top: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-primary) 100%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--accent-light);
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .insight-card strong {
+      color: var(--accent-dark);
+    }
+
+    /* ============================================================
+       HABITAT EXPLORER
+       ============================================================ */
+    .habitat-explorer {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+
+    .habitat-tabs {
+      display: flex;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      padding: var(--space-sm);
+      gap: var(--space-xs);
+      scrollbar-width: thin;
+    }
+
+    .habitat-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .habitat-tabs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .habitat-tabs::-webkit-scrollbar-thumb {
+      background: var(--border-medium);
+      border-radius: 2px;
+    }
+
+    .habitat-tab {
+      flex-shrink: 0;
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-base);
+      font-family: var(--font-family);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .habitat-tab:hover {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .habitat-tab.active {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .habitat-tab-emoji {
+      font-size: 1.1rem;
+    }
+
+    .habitat-content {
+      padding: var(--space-lg);
+      animation: fadeInUp 0.4s ease both;
+    }
+
+    .habitat-scene {
+      height: 180px;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-lg);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: var(--space-md);
+    }
+
+    /* Scene backgrounds per habitat */
+    .scene-garden {
+      background: linear-gradient(180deg, #B3E5FC 0%, #C5E1A5 70%, #8BC34A 100%);
+    }
+
+    .scene-field {
+      background: linear-gradient(180deg, #81D4FA 0%, #FFF59D 60%, #AED581 100%);
+    }
+
+    .scene-tree {
+      background: linear-gradient(180deg, #B3E5FC 0%, #81C784 50%, #558B2F 100%);
+    }
+
+    .scene-mangrove {
+      background: linear-gradient(180deg, #B0BEC5 0%, #90A4AE 50%, #6D4C41 100%);
+    }
+
+    .scene-pond {
+      background: linear-gradient(180deg, #81D4FA 0%, #4DD0E1 60%, #00838F 100%);
+    }
+
+    .scene-seashore {
+      background: linear-gradient(180deg, #81D4FA 0%, #FFE082 50%, #FFCA28 100%);
+    }
+
+    .scene-emojis {
+      display: flex;
+      gap: var(--space-md);
+      font-size: 3rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .scene-emoji-item {
+      animation: floatIn 2s ease-in-out infinite alternate;
+    }
+
+    .scene-emoji-item:nth-child(2) { animation-delay: 0.3s; }
+    .scene-emoji-item:nth-child(3) { animation-delay: 0.6s; }
+    .scene-emoji-item:nth-child(4) { animation-delay: 0.9s; }
+
+    @keyframes floatIn {
+      from { transform: translateY(0); }
+      to { transform: translateY(-4px); }
+    }
+
+    .habitat-name {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .habitat-tagline {
+      font-size: var(--font-size-sm);
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-bottom: var(--space-lg);
+      font-style: italic;
+    }
+
+    /* Conditions grid */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .condition-chip {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .condition-label {
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+      font-weight: 600;
+    }
+
+    .condition-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Description block */
+    .habitat-description {
+      padding: var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: var(--space-lg);
+      border-left: 3px solid var(--accent-light);
+    }
+
+    /* Organisms list */
+    .organisms-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+
+    @media (max-width: 600px) {
+      .organisms-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .organism-group {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+    }
+
+    .organism-group-title {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-dark);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .organism-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .organism-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-base);
+      border: 1px solid transparent;
+    }
+
+    .organism-item:hover {
+      border-color: var(--accent-light);
+      background: var(--accent-bg);
+      transform: translateX(2px);
+    }
+
+    .organism-icon {
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    .organism-name {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .organism-note {
+      font-size: var(--font-size-xs);
+      color: var(--text-tertiary);
+      margin-left: auto;
+      font-style: italic;
+    }
+
+    /* ============================================================
+       ENVIRONMENTAL FACTORS — LIVING VS NON-LIVING
+       ============================================================ */
+    .factors-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+
+    @media (max-width: 700px) {
+      .factors-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .factor-column {
+      padding: var(--space-lg);
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .factor-column-living {
+      border-top: 4px solid var(--garden-base);
+    }
+
+    .factor-column-nonliving {
+      border-top: 4px solid var(--accent-base);
+    }
+
+    .factor-column-title {
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .factor-column-subtitle {
+      font-size: var(--font-size-xs);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-md);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .factor-chip {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-sm);
+      transition: all var(--transition-base);
+      cursor: default;
+    }
+
+    .factor-chip:hover {
+      background: var(--accent-bg);
+      transform: translateX(3px);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .factor-living-chip:hover {
+      background: var(--garden-bg);
+    }
+
+    .factor-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .factor-name {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================================================
+       INTERDEPENDENCY EXPLORER
+       ============================================================ */
+    .interdep-container {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+
+    .interdep-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    @media (max-width: 600px) {
+      .interdep-selector {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .interdep-tab {
+      padding: var(--space-md);
+      background: var(--bg-primary);
+      border: none;
+      border-right: 1px solid var(--border-subtle);
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .interdep-tab:last-child {
+      border-right: none;
+    }
+
+    @media (max-width: 600px) {
+      .interdep-tab:nth-child(2) {
+        border-right: none;
+      }
+      .interdep-tab:nth-child(1),
+      .interdep-tab:nth-child(2) {
+        border-bottom: 1px solid var(--border-subtle);
+      }
+    }
+
+    .interdep-tab:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .interdep-tab.active {
+      background: var(--accent-bg);
+      color: var(--accent-dark);
+    }
+
+    .interdep-tab-icon {
+      font-size: 1.75rem;
+    }
+
+    .interdep-tab-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+    }
+
+    .interdep-content {
+      padding: var(--space-lg);
+      animation: fadeInUp 0.3s ease both;
+    }
+
+    .interdep-role-title {
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .interdep-role-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .effect-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .effect-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--accent-base);
+      animation: slideInLeft 0.4s ease both;
+    }
+
+    .effect-item:nth-child(1) { animation-delay: 0.05s; }
+    .effect-item:nth-child(2) { animation-delay: 0.1s; }
+    .effect-item:nth-child(3) { animation-delay: 0.15s; }
+    .effect-item:nth-child(4) { animation-delay: 0.2s; }
+    .effect-item:nth-child(5) { animation-delay: 0.25s; }
+    .effect-item:nth-child(6) { animation-delay: 0.3s; }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .effect-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--font-size-xs);
+    }
+
+    .effect-text {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .effect-text strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================================================
+       UNFAVOURABLE CONDITIONS
+       ============================================================ */
+    .response-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .response-card {
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-xs);
+      cursor: default;
+    }
+
+    .response-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-base);
+    }
+
+    .response-adapt { border-top: 4px solid var(--garden-base); }
+    .response-die { border-top: 4px solid #E57373; }
+    .response-migrate { border-top: 4px solid var(--accent-base); }
+
+    .response-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      display: block;
+    }
+
+    .response-title {
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+      letter-spacing: 0.01em;
+    }
+
+    .response-description {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-md);
+    }
+
+    .response-example {
+      font-size: var(--font-size-xs);
+      color: var(--text-tertiary);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       POND CRISIS SIMULATOR
+       ============================================================ */
+    .pond-sim {
+      background: linear-gradient(180deg, #81D4FA 0%, #26C6DA 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+    }
+
+    .pond-surface {
+      position: relative;
+      height: 60px;
+      margin-bottom: var(--space-sm);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      padding: 0 var(--space-sm);
+    }
+
+    .pond-plant {
+      font-size: 1.5rem;
+      animation: fadeInUp 0.4s ease both;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    }
+
+    .pond-underwater {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(2px);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      min-height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      transition: all var(--transition-slow);
+    }
+
+    .pond-underwater.dark {
+      background: rgba(0,0,0,0.3);
+    }
+
+    .pond-creature {
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      transition: all var(--transition-slow);
+    }
+
+    .pond-creature.dying {
+      opacity: 0.3;
+      transform: rotate(180deg);
+    }
+
+    .pond-status {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      background: rgba(255,255,255,0.95);
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pond-status.crisis {
+      background: #FFCDD2;
+      color: #C62828;
+    }
+
+    .pond-sim-controls {
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .slider-value {
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      color: var(--accent-dark);
+      font-variant-numeric: tabular-nums;
+      transition: all var(--transition-fast);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: var(--bg-tertiary);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--accent-base);
+      box-shadow: var(--shadow-button);
+      cursor: grab;
+      transition: all var(--transition-fast);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--accent-base);
+      cursor: grab;
+    }
+
+    .pond-explanation {
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-left: 3px solid var(--accent-base);
+      transition: all var(--transition-base);
+    }
+
+    .pond-explanation strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================================================
+       KEYWORDS GLOSSARY
+       ============================================================ */
+    .keyword-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-sm);
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .keyword-chip {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-align: center;
+      font-family: var(--font-family);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .keyword-chip:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent-base);
+      color: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-button);
+    }
+
+    .keyword-chip.active {
+      background: var(--accent-light);
+      border-color: var(--accent-dark);
+      color: var(--text-primary);
+    }
+
+    .keyword-definition-box {
+      max-width: 700px;
+      margin: var(--space-lg) auto 0;
+      padding: var(--space-lg);
+      background: var(--bg-primary);
+      border: 1px solid var(--accent-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+
+    .keyword-definition-box.empty {
+      color: var(--text-tertiary);
+      font-style: italic;
+      border-style: dashed;
+    }
+
+    .keyword-def-term {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--accent-dark);
+      margin-bottom: var(--space-sm);
+      letter-spacing: 0.01em;
+    }
+
+    .keyword-def-text {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ============================================================
+       NAVIGATION JUMP BAR
+       ============================================================ */
+    .nav-jumps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-sm);
+      max-width: 860px;
+      margin: 0 auto var(--space-2xl);
+      padding: var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-jump-btn {
+      padding: 8px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition-base);
+      font-family: var(--font-family);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-jump-btn:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent-base);
+      color: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       ANIMATIONS
+       ============================================================ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.5s ease-out both;
+    }
+
+    .stagger-children > * { animation: fadeInUp 0.5s ease-out both; }
+    .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+    .stagger-children > *:nth-child(2) { animation-delay: 0.12s; }
+    .stagger-children > *:nth-child(3) { animation-delay: 0.19s; }
+    .stagger-children > *:nth-child(4) { animation-delay: 0.26s; }
+    .stagger-children > *:nth-child(5) { animation-delay: 0.33s; }
+    .stagger-children > *:nth-child(6) { animation-delay: 0.4s; }
+
+    /* ============================================================
+       PRINT STYLES
+       ============================================================ */
+    @media print {
+      @page {
+        size: A4;
+        margin: 15mm 20mm;
+      }
+
+      .print-btn,
+      .nav-jumps,
+      input[type="range"],
+      .pop-controls,
+      .zoom-selector,
+      .habitat-tabs,
+      .interdep-selector {
+        display: none !important;
+      }
+
+      body {
+        background: white !important;
+        color: #1A1A1A !important;
+        font-size: 10pt;
+        line-height: 1.5;
+      }
+
+      .polymath-header {
+        position: static !important;
+        border-bottom: 1px solid #ccc !important;
+        box-shadow: none !important;
+        padding: 6mm 0 !important;
+      }
+
+      .polymath-logo {
+        height: 40px !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .page-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+
+      .prose {
+        max-width: 100% !important;
+        font-size: 10pt;
+        color: #1A1A1A !important;
+      }
+
+      .widget-block,
+      .zoom-widget,
+      .habitat-explorer,
+      .interdep-container,
+      .pond-sim,
+      .pond-sim-controls,
+      .takeaway,
+      .response-card {
+        max-width: 100% !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+      }
+
+      .takeaway {
+        background: #f0f7ff !important;
+        border-left: 3px solid #42A5F5 !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .term {
+        background: #e8f4fd !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .habitat-content,
+      .interdep-content {
+        display: block !important;
+      }
+
+      /* Force all habitats visible when printed */
+      .habitat-content.hidden,
+      .interdep-content.hidden {
+        display: block !important;
+      }
+
+      /* Kill all animations */
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      h1, h2, h3,
+      .section-heading,
+      .page-title {
+        page-break-after: avoid;
+      }
+
+      .scene-emojis {
+        filter: none !important;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="polymath-header">
+    <img src="https://dl.dropboxusercontent.com/scl/fi/h40yjlyg8ldefwfaa3dib/polymath-logo-sticker.png?rlkey=o1ra4taqy79gt9t8u096v82zj"
+         alt="Polymath Learning Centre"
+         class="polymath-logo" />
+    <button class="print-btn" onclick="window.print()" title="Print / Save as PDF" aria-label="Print this page">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 9V2h12v7"/>
+        <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+    </button>
+  </header>
+
+  <main class="page-container animate-in">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <h1 class="page-title">Living Together</h1>
+    <p class="page-subtitle">Primary 6 Science · Living Things and the Environment</p>
+
+    <!-- Navigation Jump Bar -->
+    <nav class="nav-jumps" aria-label="Section navigation">
+      <a href="#section-levels" class="nav-jump-btn">🔍 Three Levels</a>
+      <a href="#section-habitats" class="nav-jump-btn">🏞️ Habitats</a>
+      <a href="#section-factors" class="nav-jump-btn">⚖️ Factors</a>
+      <a href="#section-interdep" class="nav-jump-btn">🔗 Interdependency</a>
+      <a href="#section-pond" class="nav-jump-btn">💧 Pond Crisis</a>
+      <a href="#section-responses" class="nav-jump-btn">🌱 Responses</a>
+      <a href="#section-keywords" class="nav-jump-btn">🔑 Keywords</a>
+    </nav>
+
+    <!-- Syllabus Outcomes -->
+    <p class="prose">
+      This chapter is about how <strong>living things share their homes</strong>. You'll learn the
+      difference between an <span class="term">organism</span>, a <span class="term">population</span>,
+      and a <span class="term">community</span>, explore six different <span class="term">habitats</span>,
+      and see how every living thing depends on others to survive.
+    </p>
+
+    <div class="outcomes-grid stagger-children">
+      <div class="outcome-card">
+        <div class="outcome-key">1</div>
+        <div class="outcome-text">Identify the factors that affect the survival of an organism.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-key">2</div>
+        <div class="outcome-text">Differentiate among the terms organism, population and community.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-key">3</div>
+        <div class="outcome-text">Show how different habitats support different communities.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-key">4</div>
+        <div class="outcome-text">Observe, collect, and record information about interacting factors.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-key">5</div>
+        <div class="outcome-text">Trace the energy pathway from the Sun through living things.</div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 1: THE THREE LEVELS
+         ============================================================ -->
+    <h2 class="section-heading" id="section-levels">Zoom In, Zoom Out</h2>
+    <p class="section-subheading">From one frog, to many frogs, to the whole pond community.</p>
+
+    <p class="prose">
+      An <strong>organism</strong> is a single living thing — one frog, one tree, one ant. A
+      <strong>population</strong> is a group of the same kind of organism living together. And
+      a <strong>community</strong> is all the populations sharing one habitat. Tap the buttons
+      below to zoom in and out.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Interactive · Switch the zoom level</div>
+      <div class="zoom-widget">
+        <div class="zoom-selector">
+          <button class="zoom-btn active" data-zoom="organism">🐸 Organism</button>
+          <button class="zoom-btn" data-zoom="population">🐸🐸🐸 Population</button>
+          <button class="zoom-btn" data-zoom="community">🌍 Community</button>
+        </div>
+
+        <div class="zoom-stage" id="zoomStage">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="zoom-caption">
+          <div class="zoom-level-label" id="zoomLabel">Organism</div>
+          <p class="zoom-definition" id="zoomDefinition">
+            A single living thing — it could be a plant, animal, fungus, or microorganism.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Here's the tricky part: <strong>young and adult stages count as one population</strong>.
+      Tadpoles and frogs are the same animal at different ages, so together they are <em>one
+      population of frogs</em>. Caterpillars, pupae, and butterflies are also just <em>one
+      population of butterflies</em>. Try the counter below.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Interactive · Count the frog population</div>
+      <div class="pop-counter-box">
+        <div class="pop-counter-header">
+          <span class="pop-counter-title">Frog population size</span>
+          <span class="pop-counter-value" id="popValue">5</span>
+        </div>
+        <div class="pop-counter-display" id="popDisplay"></div>
+        <div class="pop-controls">
+          <button class="stepper-btn" id="popMinus" aria-label="Remove a frog">−</button>
+          <button class="stepper-btn" id="popPlus" aria-label="Add a frog">+</button>
+        </div>
+        <div class="insight-card" id="popInsight">
+          Tadpoles 🐟 and frogs 🐸 are the <strong>same population</strong> — they're just
+          different life stages of the same animal. The population size is affected by
+          <strong>birth rate</strong>, <strong>migration rate</strong>, and <strong>death rate</strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 2: HABITAT EXPLORER
+         ============================================================ -->
+    <h2 class="section-heading" id="section-habitats">Six Habitats, Six Communities</h2>
+    <p class="section-subheading">
+      Different habitats have different conditions — and each supports a different group of organisms.
+    </p>
+
+    <p class="prose">
+      A <strong>habitat</strong> is the place where organisms live. It provides the conditions they
+      need: <em>air, water, food, space, and shelter</em>. Because each habitat has different
+      conditions — how wet, how bright, what kind of soil — each one supports a different
+      <span class="term">community</span>. Tap each habitat to explore.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Interactive · Explore each habitat</div>
+      <div class="habitat-explorer">
+        <div class="habitat-tabs" role="tablist">
+          <button class="habitat-tab active" data-habitat="garden" role="tab">
+            <span class="habitat-tab-emoji">🌻</span> Garden
+          </button>
+          <button class="habitat-tab" data-habitat="field" role="tab">
+            <span class="habitat-tab-emoji">🌾</span> Field
+          </button>
+          <button class="habitat-tab" data-habitat="tree" role="tab">
+            <span class="habitat-tab-emoji">🌳</span> Single Tree
+          </button>
+          <button class="habitat-tab" data-habitat="mangrove" role="tab">
+            <span class="habitat-tab-emoji">🌿</span> Mangrove Swamp
+          </button>
+          <button class="habitat-tab" data-habitat="pond" role="tab">
+            <span class="habitat-tab-emoji">💧</span> Pond
+          </button>
+          <button class="habitat-tab" data-habitat="seashore" role="tab">
+            <span class="habitat-tab-emoji">🏖️</span> Seashore
+          </button>
+        </div>
+        <div class="habitat-content" id="habitatContent">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">Why habitats differ</div>
+      Every habitat has a <strong>unique mix</strong> of sunlight, temperature, water, and soil.
+      Only organisms that can survive those exact conditions thrive there — which is why you
+      won't find a frog on a beach or a coconut tree in a pond.
+    </div>
+
+    <!-- ============================================================
+         SECTION 3: ENVIRONMENTAL FACTORS
+         ============================================================ -->
+    <h2 class="section-heading" id="section-factors">What Shapes Survival?</h2>
+    <p class="section-subheading">Environmental factors come in two kinds — living and non-living.</p>
+
+    <p class="prose">
+      An organism's survival isn't random — it's shaped by the conditions around it. Scientists
+      split these conditions into two groups: <strong>living factors</strong> (other organisms)
+      and <strong>non-living factors</strong> (the physical environment). Hover each chip to
+      see what it means.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Two kinds of environmental factors</div>
+      <div class="factors-split">
+        <div class="factor-column factor-column-living">
+          <div class="factor-column-title">🌿 Living Factors</div>
+          <div class="factor-column-subtitle">The other organisms around</div>
+          <div class="factor-chip factor-living-chip">
+            <span class="factor-icon">🥬</span>
+            <span class="factor-name">Availability of food</span>
+          </div>
+          <div class="factor-chip factor-living-chip">
+            <span class="factor-icon">🦁</span>
+            <span class="factor-name">Presence of predators</span>
+          </div>
+          <div class="factor-chip factor-living-chip">
+            <span class="factor-icon">🐇</span>
+            <span class="factor-name">Presence of prey</span>
+          </div>
+          <div class="factor-chip factor-living-chip">
+            <span class="factor-icon">🤼</span>
+            <span class="factor-name">Presence of competitors</span>
+          </div>
+          <div class="factor-chip factor-living-chip">
+            <span class="factor-icon">🌱</span>
+            <span class="factor-name">Presence of plants</span>
+          </div>
+        </div>
+
+        <div class="factor-column factor-column-nonliving">
+          <div class="factor-column-title">💨 Non-living Factors</div>
+          <div class="factor-column-subtitle">The physical environment</div>
+          <div class="factor-chip">
+            <span class="factor-icon">💨</span>
+            <span class="factor-name">Amount of air</span>
+          </div>
+          <div class="factor-chip">
+            <span class="factor-icon">💧</span>
+            <span class="factor-name">Amount of water</span>
+          </div>
+          <div class="factor-chip">
+            <span class="factor-icon">☀️</span>
+            <span class="factor-name">Amount of light</span>
+          </div>
+          <div class="factor-chip">
+            <span class="factor-icon">🌡️</span>
+            <span class="factor-name">Temperature</span>
+          </div>
+          <div class="factor-chip">
+            <span class="factor-icon">🪨</span>
+            <span class="factor-name">Type of soil</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 4: INTERDEPENDENCY EXPLORER
+         ============================================================ -->
+    <h2 class="section-heading" id="section-interdep">Everything Depends on Everything</h2>
+    <p class="section-subheading">
+      Plants, fungi, animals, and humans all affect each other's survival.
+    </p>
+
+    <p class="prose">
+      All the populations in a habitat are <strong>interdependent</strong> — they rely on each
+      other in ways that are not always obvious. Plants make food for everyone. Fungi and
+      bacteria clean up dead matter. Animals spread seeds and pollinate. Humans can either
+      protect a habitat or destroy it. Choose a group below to see its role.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Interactive · Who does what?</div>
+      <div class="interdep-container">
+        <div class="interdep-selector">
+          <button class="interdep-tab active" data-role="plants">
+            <span class="interdep-tab-icon">🌱</span>
+            <span class="interdep-tab-label">Plants</span>
+          </button>
+          <button class="interdep-tab" data-role="fungi">
+            <span class="interdep-tab-icon">🍄</span>
+            <span class="interdep-tab-label">Fungi &amp; Bacteria</span>
+          </button>
+          <button class="interdep-tab" data-role="animals">
+            <span class="interdep-tab-icon">🐝</span>
+            <span class="interdep-tab-label">Animals</span>
+          </button>
+          <button class="interdep-tab" data-role="humans">
+            <span class="interdep-tab-icon">🧑</span>
+            <span class="interdep-tab-label">Humans</span>
+          </button>
+        </div>
+        <div class="interdep-content" id="interdepContent">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 5: POND CRISIS SIMULATOR
+         ============================================================ -->
+    <h2 class="section-heading" id="section-pond">The Pond Crisis</h2>
+    <p class="section-subheading">
+      Watch what happens when floating plants take over the pond surface.
+    </p>
+
+    <p class="prose">
+      A <strong>pond</strong> is a still-freshwater habitat. It sustains amphibious animals
+      like frogs. But a pond can experience <em>a crisis</em> when <strong>floating plants
+      grow too well and cover the surface</strong>. Drag the slider to add more floating plants
+      and see what happens to the underwater community.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Interactive · Drag the slider</div>
+      <div class="pond-sim">
+        <div class="pond-status" id="pondStatus">Healthy</div>
+        <div class="pond-surface" id="pondSurface"></div>
+        <div class="pond-underwater" id="pondUnderwater">
+          <span class="pond-creature" data-creature="hydrilla">🌿</span>
+          <span class="pond-creature" data-creature="fish">🐟</span>
+          <span class="pond-creature" data-creature="frog">🐸</span>
+          <span class="pond-creature" data-creature="beetle">🪲</span>
+        </div>
+      </div>
+
+      <div class="pond-sim-controls">
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Floating water hyacinths on surface</span>
+            <span class="slider-value" id="hyacinthValue">3</span>
+          </div>
+          <input type="range" id="hyacinthSlider" min="0" max="20" value="3" step="1">
+        </div>
+      </div>
+
+      <div class="pond-explanation" id="pondExplanation">
+        A few floating plants is <strong>healthy</strong>. Sunlight still reaches the
+        fully-submerged plants like hydrilla, so they can photosynthesise and make oxygen
+        and food for the pond's community.
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">The pond chain reaction</div>
+      Too many floating plants block sunlight → fully-submerged plants can't photosynthesise
+      enough → not enough <strong>oxygen</strong> or <strong>food</strong> is produced →
+      the pond's animals die.
+    </div>
+
+    <!-- ============================================================
+         SECTION 6: UNFAVOURABLE CONDITIONS
+         ============================================================ -->
+    <h2 class="section-heading" id="section-responses">When Things Get Bad</h2>
+    <p class="section-subheading">
+      Living things have three options when their habitat changes.
+    </p>
+
+    <p class="prose">
+      When <strong>environmental conditions become unfavourable</strong> — a drought, a flood,
+      a sudden temperature change, or loss of food — organisms respond in one of three ways.
+      They can <em>adapt</em>, <em>die</em>, or <em>migrate</em>.
+    </p>
+
+    <div class="widget-block">
+      <div class="widget-block-label">Three possible responses</div>
+      <div class="response-grid">
+        <div class="response-card response-adapt">
+          <span class="response-icon">🦎</span>
+          <div class="response-title">Adapt</div>
+          <div class="response-description">
+            Change to survive with the new conditions.
+          </div>
+          <div class="response-example">
+            Example: A fox growing thicker fur when winters get colder.
+          </div>
+        </div>
+
+        <div class="response-card response-die">
+          <span class="response-icon">💀</span>
+          <div class="response-title">Die</div>
+          <div class="response-description">
+            Be completely killed off by the new conditions.
+          </div>
+          <div class="response-example">
+            Example: Fish dying when a pond runs out of oxygen.
+          </div>
+        </div>
+
+        <div class="response-card response-migrate">
+          <span class="response-icon">🦅</span>
+          <div class="response-title">Migrate</div>
+          <div class="response-description">
+            Leave the habitat to seek a new one with more favourable conditions.
+          </div>
+          <div class="response-example">
+            Example: Birds flying south when winter arrives.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION 7: KEYWORDS GLOSSARY
+         ============================================================ -->
+    <h2 class="section-heading" id="section-keywords">Key Vocabulary</h2>
+    <p class="section-subheading">
+      Tap any keyword to see its definition.
+    </p>
+
+    <div class="keyword-grid" id="keywordGrid">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="keyword-definition-box empty" id="keywordDefBox">
+      <span>Tap a keyword above to see its definition.</span>
+    </div>
+
+    <!-- ============================================================
+         FINAL TAKEAWAY
+         ============================================================ -->
+    <div class="takeaway" style="margin-top: var(--space-2xl);">
+      <div class="takeaway-label">Chapter summary</div>
+      Living things are <strong>never alone</strong>. Every organism is part of a population,
+      every population is part of a community, and every community depends on the conditions
+      of its habitat. When conditions change, organisms must <em>adapt</em>, <em>migrate</em>,
+      or <em>die</em>. Understanding these relationships is the key to understanding life.
+    </div>
+
+  </main>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+
+    /* =============================================================
+       DATA: ZOOM LEVELS
+       ============================================================= */
+    const zoomData = {
+      organism: {
+        label: 'Organism',
+        definition: 'A single living thing — it could be a plant, animal, fungus, or microorganism. For example, one frog sitting on a lily pad.',
+        render: function() {
+          return '<div class="zoom-visual"><span class="zoom-emoji">🐸</span></div>';
+        }
+      },
+      population: {
+        label: 'Population',
+        definition: 'A group of organisms of the same kind living together in a particular habitat. Tadpoles and adult frogs are one population — they are the same animal at different life stages.',
+        render: function() {
+          let html = '<div class="zoom-visual">';
+          for (let i = 0; i < 3; i++) html += '<span class="zoom-emoji small">🐸</span>';
+          html += '<span class="zoom-emoji small">🐟</span>';
+          html += '<span class="zoom-emoji small">🐸</span>';
+          html += '</div>';
+          return html;
+        }
+      },
+      community: {
+        label: 'Community',
+        definition: 'All the populations of organisms living together in a habitat. In a pond: frogs, fish, dragonflies, water lilies, hydrilla — every living thing together.',
+        render: function() {
+          const creatures = ['🐸', '🐟', '🐠', '🪲', '🌿', '🪷', '🌾', '🦆', '🐸', '🪰', '🌿', '🐟'];
+          let html = '<div class="zoom-visual">';
+          creatures.forEach(c => {
+            html += `<span class="zoom-emoji tiny">${c}</span>`;
+          });
+          html += '</div>';
+          return html;
+        }
+      }
+    };
+
+    function updateZoom(level) {
+      const stage = document.getElementById('zoomStage');
+      const label = document.getElementById('zoomLabel');
+      const definition = document.getElementById('zoomDefinition');
+      const data = zoomData[level];
+
+      stage.innerHTML = data.render();
+      label.textContent = data.label;
+      definition.textContent = data.definition;
+
+      // Update button states
+      document.querySelectorAll('.zoom-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.zoom === level);
+      });
+    }
+
+    // Wire up zoom buttons
+    document.querySelectorAll('.zoom-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        updateZoom(this.dataset.zoom);
+      });
+    });
+
+    // Initialize
+    updateZoom('organism');
+
+    /* =============================================================
+       POPULATION COUNTER
+       ============================================================= */
+    let popCount = 5;
+    const popValueEl = document.getElementById('popValue');
+    const popDisplayEl = document.getElementById('popDisplay');
+    const popMinusBtn = document.getElementById('popMinus');
+    const popPlusBtn = document.getElementById('popPlus');
+
+    function renderPopulation() {
+      popValueEl.textContent = popCount;
+      let html = '';
+      // Mix tadpoles and frogs to show life-stage diversity
+      for (let i = 0; i < popCount; i++) {
+        const isTadpole = i % 3 === 0 && i < popCount * 0.6;
+        html += `<span class="pop-emoji">${isTadpole ? '🐟' : '🐸'}</span>`;
+      }
+      popDisplayEl.innerHTML = html;
+    }
+
+    popMinusBtn.addEventListener('click', function() {
+      if (popCount > 0) {
+        popCount--;
+        renderPopulation();
+      }
+    });
+
+    popPlusBtn.addEventListener('click', function() {
+      if (popCount < 30) {
+        popCount++;
+        renderPopulation();
+      }
+    });
+
+    renderPopulation();
+
+    /* =============================================================
+       DATA: HABITATS
+       ============================================================= */
+    const habitatData = {
+      garden: {
+        name: 'Garden Habitat',
+        tagline: 'Hot days, cool nights, fertile soil — plants thrive here.',
+        sceneClass: 'scene-garden',
+        sceneEmojis: ['🌺', '🌻', '🐝', '🌼'],
+        description: 'The garden habitat is <strong>hot in the day</strong> with plenty of sunlight, and <strong>cool at night</strong>. The soil is <strong>fertile</strong> — rich in mineral salts — so plants grow well. With lots of sunlight and rainfall, plants can photosynthesise and produce plenty of food.',
+        conditions: [
+          { label: 'Temperature', value: 'Hot (day), cool (night)' },
+          { label: 'Sunlight', value: 'Plenty' },
+          { label: 'Soil', value: 'Fertile, rich in mineral salts' },
+          { label: 'Water', value: 'Rainfall available' }
+        ],
+        plants: [
+          { icon: '🌺', name: 'Ixora' },
+          { icon: '🌼', name: 'Hibiscus' },
+          { icon: '🌱', name: 'Grass' }
+        ],
+        animals: [
+          { icon: '🐦', name: 'Sparrow' },
+          { icon: '🐝', name: 'Bee' },
+          { icon: '🐜', name: 'Ant' }
+        ]
+      },
+      field: {
+        name: 'Field Habitat',
+        tagline: 'Even more sunlight, hotter days, more grass than trees.',
+        sceneClass: 'scene-field',
+        sceneEmojis: ['🌻', '🦗', '🌾', '🕷️'],
+        description: 'The field habitat is <strong>like the garden but with even more sunlight</strong> and even hotter days. Because there are <strong>fewer shrubs and trees</strong>, the field community is more directly exposed to the sun. More grass, fewer big plants. At night it cools down quickly as heat escapes to the surroundings.',
+        conditions: [
+          { label: 'Temperature', value: 'Very hot (day)' },
+          { label: 'Sunlight', value: 'Direct & intense' },
+          { label: 'Soil', value: 'Fertile but drier' },
+          { label: 'Vegetation', value: 'Mostly grass' }
+        ],
+        plants: [
+          { icon: '🌸', name: 'Mimosa' },
+          { icon: '🌻', name: 'Sunflower' },
+          { icon: '🌾', name: 'Grass' }
+        ],
+        animals: [
+          { icon: '🦗', name: 'Grasshopper' },
+          { icon: '🪱', name: 'Earthworm' },
+          { icon: '🕷️', name: 'Spider' }
+        ]
+      },
+      tree: {
+        name: 'Single-tree Habitat',
+        tagline: 'One tree is a whole community on its own.',
+        sceneClass: 'scene-tree',
+        sceneEmojis: ['🌳', '🐿️', '🪶', '🕷️'],
+        description: 'A <strong>single tree</strong> is a habitat all by itself. Many organisms live on or around one tree. It has <strong>more shade</strong> than the field or garden, but still has <strong>enough sunlight</strong> for smaller plants that grow on the tree\'s bark to survive.',
+        conditions: [
+          { label: 'Sunlight', value: 'Moderate (shaded)' },
+          { label: 'Moisture', value: 'Higher (shelter)' },
+          { label: 'Surface', value: 'Tree bark & branches' },
+          { label: 'Shelter', value: 'Plenty' }
+        ],
+        plants: [
+          { icon: '🍃', name: 'Dragon scale' },
+          { icon: '🌿', name: "Bird's nest fern" },
+          { icon: '🟢', name: 'Moss' }
+        ],
+        animals: [
+          { icon: '🐿️', name: 'Squirrel' },
+          { icon: '🪶', name: 'Woodpecker' },
+          { icon: '🕷️', name: 'Spider' }
+        ]
+      },
+      mangrove: {
+        name: 'Mangrove Swamp Habitat',
+        tagline: 'Muddy, wet, flooded at high tide — home to amphibious life.',
+        sceneClass: 'scene-mangrove',
+        sceneEmojis: ['🌳', '🦀', '🐟', '🦟'],
+        description: 'A mangrove swamp is a <strong>muddy habitat</strong> with a lot of water in the soil. The soil is <strong>clayey and retains water</strong>. It is <strong>exposed during low tide</strong> and <strong>flooded during high tide</strong> — so it is home to many living things that can live <em>both on land and in water</em>.',
+        conditions: [
+          { label: 'Soil', value: 'Clayey, water-retaining' },
+          { label: 'Water', value: 'Tidal (low/high)' },
+          { label: 'Salinity', value: 'Brackish (salty)' },
+          { label: 'Land state', value: 'Alternates wet/dry' }
+        ],
+        plants: [
+          { icon: '🍃', name: 'Duckweed' },
+          { icon: '🌾', name: 'Cattail' },
+          { icon: '🌳', name: 'Mangrove' }
+        ],
+        animals: [
+          { icon: '🦀', name: 'Crab' },
+          { icon: '🐟', name: 'Mudskipper' },
+          { icon: '🦟', name: 'Mosquito' }
+        ]
+      },
+      pond: {
+        name: 'Pond Habitat',
+        tagline: 'Still fresh water — three kinds of plants, and many amphibians.',
+        sceneClass: 'scene-pond',
+        sceneEmojis: ['🪷', '🐸', '🐟', '🪲'],
+        description: 'A pond is made of <strong>still fresh water</strong> (not moving salt water like the ocean). It also includes the <strong>wet land around it</strong>. Because there\'s plenty of freshwater, it supports amphibious species. But if floating plants grow too much, they can <em>block sunlight</em> — then fully-submerged plants can\'t make oxygen, and the animals die.',
+        conditions: [
+          { label: 'Water', value: 'Still, fresh' },
+          { label: 'Oxygen', value: 'From submerged plants' },
+          { label: 'Sunlight', value: 'Depends on surface cover' },
+          { label: 'Surroundings', value: 'Wet land' }
+        ],
+        plants: [
+          { icon: '🪻', name: 'Water hyacinth', note: 'Floating' },
+          { icon: '🪷', name: 'Water lily', note: 'Partially-submerged' },
+          { icon: '🌿', name: 'Hydrilla', note: 'Fully-submerged' }
+        ],
+        animals: [
+          { icon: '🪲', name: 'Great diving beetle' },
+          { icon: '🪳', name: 'Pond skater' },
+          { icon: '🐸', name: 'Frog' }
+        ]
+      },
+      seashore: {
+        name: 'Seashore Habitat',
+        tagline: 'Sandy shore, salty seawater, hot sun — wet and dry together.',
+        sceneClass: 'scene-seashore',
+        sceneEmojis: ['🌴', '🦀', '🐚', '🌊'],
+        description: 'The seashore includes the <strong>sandy shore</strong> and the sea nearby. It is <strong>hot in the day</strong> with a lot of sunlight and <strong>cool at night</strong> (the sea keeps it cooler). The soil is <strong>sandy</strong> — large particles with big air spaces, so it <em>does not retain water well</em>. It is a wet habitat filled with seawater.',
+        conditions: [
+          { label: 'Temperature', value: 'Hot (day), cool (night)' },
+          { label: 'Sunlight', value: 'A lot' },
+          { label: 'Soil', value: 'Sandy (poor water retention)' },
+          { label: 'Water', value: 'Salty seawater' }
+        ],
+        plants: [
+          { icon: '🌴', name: 'Coconut tree' }
+        ],
+        animals: [
+          { icon: '🦀', name: 'Crab' },
+          { icon: '🐚', name: 'Hermit crab' },
+          { icon: '🪸', name: 'Sea anemone' }
+        ]
+      }
+    };
+
+    function renderHabitat(key) {
+      const data = habitatData[key];
+      const container = document.getElementById('habitatContent');
+
+      let sceneEmojis = data.sceneEmojis.map(e =>
+        `<span class="scene-emoji-item">${e}</span>`
+      ).join('');
+
+      let conditionsHTML = data.conditions.map(c => `
+        <div class="condition-chip">
+          <span class="condition-label">${c.label}</span>
+          <span class="condition-value">${c.value}</span>
+        </div>
+      `).join('');
+
+      let plantsHTML = data.plants.map(p => `
+        <div class="organism-item">
+          <span class="organism-icon">${p.icon}</span>
+          <span class="organism-name">${p.name}</span>
+          ${p.note ? `<span class="organism-note">${p.note}</span>` : ''}
+        </div>
+      `).join('');
+
+      let animalsHTML = data.animals.map(a => `
+        <div class="organism-item">
+          <span class="organism-icon">${a.icon}</span>
+          <span class="organism-name">${a.name}</span>
+          ${a.note ? `<span class="organism-note">${a.note}</span>` : ''}
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="habitat-scene ${data.sceneClass}">
+          <div class="scene-emojis">${sceneEmojis}</div>
+        </div>
+        <div class="habitat-name">${data.name}</div>
+        <div class="habitat-tagline">${data.tagline}</div>
+        <div class="conditions-grid">${conditionsHTML}</div>
+        <div class="habitat-description">${data.description}</div>
+        <div class="organisms-split">
+          <div class="organism-group">
+            <div class="organism-group-title">🌿 Plants</div>
+            <div class="organism-list">${plantsHTML}</div>
+          </div>
+          <div class="organism-group">
+            <div class="organism-group-title">🐾 Animals</div>
+            <div class="organism-list">${animalsHTML}</div>
+          </div>
+        </div>
+      `;
+
+      // Update tab states
+      document.querySelectorAll('.habitat-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.habitat === key);
+      });
+    }
+
+    document.querySelectorAll('.habitat-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        renderHabitat(this.dataset.habitat);
+      });
+    });
+
+    // Initialize
+    renderHabitat('garden');
+
+    /* =============================================================
+       DATA: INTERDEPENDENCY ROLES
+       ============================================================= */
+    const interdepData = {
+      plants: {
+        title: 'Plants',
+        icon: '🌱',
+        role: 'Food Producers',
+        effects: [
+          'Plants are <strong>food producers</strong>. Food made during photosynthesis is the source of food all living things depend on for survival.',
+          '<strong>Oxygen</strong> produced during photosynthesis is needed by all organisms for respiration.',
+          'Plants provide <strong>shelter and protection</strong> to some organisms.'
+        ]
+      },
+      fungi: {
+        title: 'Fungi & Bacteria',
+        icon: '🍄',
+        role: 'Decomposers',
+        effects: [
+          'Fungi and bacteria are <strong>decomposers</strong> that break down dead matter to return its mineral salts back to the soil. This allows plants to absorb the mineral salts and grow well.',
+          'They also <strong>remove dead matter</strong> so that disease-causing bacteria can no longer live on the corpse — this prevents diseases from spreading.'
+        ]
+      },
+      animals: {
+        title: 'Animals',
+        icon: '🐝',
+        role: 'Consumers & Helpers',
+        effects: [
+          'Animals that feed on plants affect the <strong>survival of plants</strong>.',
+          '<strong>Predators</strong> affect the survival of their prey.',
+          '<strong>Prey</strong> affect the survival of predators (if prey disappears, predators starve).',
+          'Some animals help plants to <strong>pollinate</strong>, and some help to <strong>disperse seeds</strong>.',
+          'Animals pass <strong>waste</strong>, which decomposes and provides mineral salts for plants.',
+          'Some animals live closely together to benefit each other — this is called <strong>mutualism</strong>. Examples: hermit crabs, sea anemones, and clown fish.'
+        ]
+      },
+      humans: {
+        title: 'Humans',
+        icon: '🧑',
+        role: 'Changers of Habitats',
+        effects: [
+          'Human activities <strong>change the characteristics of habitats</strong>, which affects the survival of organisms living in them.',
+          '<strong>Deforestation</strong> causes the loss of forest habitats.',
+          'Deforestation also causes <strong>soil erosion</strong>, which leads to the loss of fertile soil — so plants grow less healthily.',
+          '<strong>Hunting and fishing</strong> cause too many animals to die and have even caused extinctions.'
+        ]
+      }
+    };
+
+    function renderInterdep(key) {
+      const data = interdepData[key];
+      const container = document.getElementById('interdepContent');
+
+      let effectsHTML = data.effects.map((effect, idx) => `
+        <div class="effect-item">
+          <div class="effect-number">${idx + 1}</div>
+          <div class="effect-text">${effect}</div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="interdep-role-title">
+          <span>${data.icon} ${data.title}</span>
+          <span class="interdep-role-badge">${data.role}</span>
+        </div>
+        <div class="effect-list">${effectsHTML}</div>
+      `;
+
+      // Restart animation by forcing reflow
+      void container.offsetWidth;
+
+      // Update tab states
+      document.querySelectorAll('.interdep-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.role === key);
+      });
+    }
+
+    document.querySelectorAll('.interdep-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        renderInterdep(this.dataset.role);
+      });
+    });
+
+    // Initialize
+    renderInterdep('plants');
+
+    /* =============================================================
+       POND CRISIS SIMULATOR
+       ============================================================= */
+    const hyacinthSlider = document.getElementById('hyacinthSlider');
+    const hyacinthValue = document.getElementById('hyacinthValue');
+    const pondSurface = document.getElementById('pondSurface');
+    const pondUnderwater = document.getElementById('pondUnderwater');
+    const pondStatus = document.getElementById('pondStatus');
+    const pondExplanation = document.getElementById('pondExplanation');
+    const pondCreatures = document.querySelectorAll('.pond-creature');
+
+    function updatePond() {
+      const count = parseInt(hyacinthSlider.value, 10);
+      hyacinthValue.textContent = count;
+
+      // Render floating plants on surface
+      let plantsHTML = '';
+      for (let i = 0; i < count; i++) {
+        plantsHTML += '<span class="pond-plant">🪻</span>';
+      }
+      pondSurface.innerHTML = plantsHTML;
+
+      // Determine status based on coverage
+      if (count <= 5) {
+        // Healthy
+        pondUnderwater.classList.remove('dark');
+        pondStatus.textContent = 'Healthy';
+        pondStatus.classList.remove('crisis');
+        pondCreatures.forEach(c => c.classList.remove('dying'));
+        pondExplanation.innerHTML = 'A few floating plants is <strong>healthy</strong>. Sunlight still reaches the fully-submerged plants like hydrilla, so they can photosynthesise and make oxygen and food for the pond\'s community.';
+      } else if (count <= 12) {
+        // Warning
+        pondUnderwater.classList.remove('dark');
+        pondStatus.textContent = 'Warning';
+        pondStatus.classList.remove('crisis');
+        pondCreatures.forEach(c => c.classList.remove('dying'));
+        pondExplanation.innerHTML = 'The surface is getting covered. <strong>Less sunlight</strong> is reaching the submerged plants, so they are photosynthesising more slowly. Oxygen levels in the water are starting to drop.';
+      } else {
+        // Crisis
+        pondUnderwater.classList.add('dark');
+        pondStatus.textContent = 'Crisis!';
+        pondStatus.classList.add('crisis');
+        pondCreatures.forEach(c => c.classList.add('dying'));
+        pondExplanation.innerHTML = '<strong>Crisis!</strong> The floating plants have covered the surface and blocked the sunlight. The fully-submerged plants <em>cannot photosynthesise</em> at a sufficient rate, so they cannot produce enough <strong>oxygen</strong> or <strong>food</strong>. The pond organisms die.';
+      }
+    }
+
+    hyacinthSlider.addEventListener('input', updatePond);
+    updatePond();
+
+    /* =============================================================
+       KEYWORDS GLOSSARY
+       ============================================================= */
+    const keywords = [
+      { term: 'Organism', def: 'A single living thing — a plant, animal, fungus, or microorganism.' },
+      { term: 'Population', def: 'A group of organisms of the same kind living together in a particular habitat. Tadpoles and frogs count as one population.' },
+      { term: 'Habitat', def: 'The place where organisms live. It provides air, water, food, space, and shelter.' },
+      { term: 'Community', def: 'A collection of all the populations of organisms living in a habitat.' },
+      { term: 'Living factors', def: 'Environmental factors that come from other organisms — food, predators, prey, competitors, plants.' },
+      { term: 'Non-living factors', def: 'Environmental factors from the physical environment — air, water, light, temperature, type of soil.' },
+      { term: 'Environmental conditions', def: 'The overall set of living and non-living factors that affect the survival of organisms in a habitat.' },
+      { term: 'Predator', def: 'An organism that hunts and feeds on other organisms.' },
+      { term: 'Prey', def: 'An organism that is hunted and eaten by another organism.' },
+      { term: 'Food producers', def: 'Plants — they make their own food through photosynthesis. All other living things depend on them.' },
+      { term: 'Food consumers', def: 'Organisms that cannot make their own food and must eat other living things.' },
+      { term: 'Decomposers', def: 'Fungi and bacteria that break down dead matter and return mineral salts to the soil.' },
+      { term: 'Adapt', def: 'To change in order to survive with new environmental conditions.' },
+      { term: 'Migrate', def: 'To leave the habitat to seek a new one with more favourable conditions.' },
+      { term: 'Floating', def: 'A plant that sits on top of the water, like water hyacinth.' },
+      { term: 'Partially-submerged', def: 'A plant with parts above and below the water surface, like water lily.' },
+      { term: 'Fully-submerged', def: 'A plant that lives entirely underwater, like hydrilla.' }
+    ];
+
+    const keywordGrid = document.getElementById('keywordGrid');
+    const keywordDefBox = document.getElementById('keywordDefBox');
+
+    keywords.forEach((kw, idx) => {
+      const chip = document.createElement('button');
+      chip.className = 'keyword-chip';
+      chip.textContent = kw.term;
+      chip.dataset.idx = idx;
+      chip.addEventListener('click', function() {
+        // Remove active from all
+        document.querySelectorAll('.keyword-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+
+        keywordDefBox.classList.remove('empty');
+        keywordDefBox.innerHTML = `
+          <div class="keyword-def-term">${kw.term}</div>
+          <div class="keyword-def-text">${kw.def}</div>
+        `;
+      });
+      keywordGrid.appendChild(chip);
+    });
+
+    /* =============================================================
+       SMOOTH SCROLL FOR NAV JUMP BUTTONS
+       ============================================================= */
+    document.querySelectorAll('.nav-jump-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const headerHeight = 90;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+
+  </script>
+
+</body>
+</html>
