@@ -178,6 +178,177 @@
     }
 
     /* ============================================================
+       AUTH / ADMIN BUTTON (left of header)
+       ============================================================ */
+    .auth-btn {
+      position: absolute;
+      left: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 6px 12px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-base);
+    }
+
+    .auth-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-base);
+      background: var(--accent-bg);
+    }
+
+    .auth-btn.is-admin {
+      border-color: var(--garden-base);
+      color: var(--garden-base);
+      background: var(--garden-bg);
+    }
+
+    .auth-btn .auth-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+    }
+
+    .auth-btn.is-admin .auth-dot {
+      background: var(--garden-base);
+      box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.25);
+    }
+
+    /* ============================================================
+       PHOTO SLOTS — Firebase-backed
+       ============================================================ */
+    /* Organism icon is the photo slot target; the whole item is the paste surface */
+    .organism-item {
+      position: relative;
+    }
+
+    .organism-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .organism-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Admin hover affordance on organism items */
+    body.admin-mode .organism-item {
+      cursor: pointer;
+      outline: none;
+    }
+
+    body.admin-mode .organism-item:hover::after,
+    body.admin-mode .organism-item:focus::after {
+      content: '📋 Paste image (⌘/Ctrl+V)';
+      position: absolute;
+      right: var(--space-sm);
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--text-primary);
+      color: var(--text-inverse);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    body.admin-mode .organism-item.slot-uploading::after {
+      content: '⏳ Uploading…';
+    }
+
+    body.admin-mode .organism-item.slot-error::after {
+      content: '⚠ Upload failed';
+      background: #c62828;
+    }
+
+    /* Scene hero photo slot */
+    .scene-photo {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: var(--radius-md);
+    }
+
+    body.admin-mode .habitat-scene {
+      cursor: pointer;
+      outline: none;
+    }
+
+    body.admin-mode .habitat-scene:hover::after,
+    body.admin-mode .habitat-scene:focus::after {
+      content: '📋 Paste a scene photo (⌘/Ctrl+V)';
+      position: absolute;
+      top: var(--space-sm);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    body.admin-mode .habitat-scene.slot-uploading::after {
+      content: '⏳ Uploading…';
+    }
+
+    body.admin-mode .habitat-scene.slot-error::after {
+      content: '⚠ Upload failed';
+      background: #c62828;
+    }
+
+    /* Admin-only remove button */
+    .slot-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-size: 12px;
+      line-height: 20px;
+      cursor: pointer;
+      display: none;
+      padding: 0;
+      z-index: 3;
+    }
+
+    body.admin-mode .organism-item:hover .slot-remove[data-has-photo="1"],
+    body.admin-mode .habitat-scene:hover .slot-remove[data-has-photo="1"] {
+      display: block;
+    }
+
+    /* ============================================================
        PAGE LAYOUT
        ============================================================ */
     .page-container {
@@ -1434,6 +1605,8 @@
       }
 
       .print-btn,
+      .auth-btn,
+      .slot-remove,
       .nav-jumps,
       input[type="range"],
       .pop-controls,
@@ -1541,6 +1714,10 @@
        HEADER
        ============================================================ -->
   <header class="polymath-header">
+    <button id="authBtn" class="auth-btn" title="Sign in with Google (admin only)">
+      <span class="auth-dot"></span>
+      <span id="authLabel">Sign in</span>
+    </button>
     <img src="https://dl.dropboxusercontent.com/scl/fi/h40yjlyg8ldefwfaa3dib/polymath-logo-sticker.png?rlkey=o1ra4taqy79gt9t8u096v82zj"
          alt="Polymath Learning Centre"
          class="polymath-logo" />
@@ -2221,25 +2398,20 @@
         </div>
       `).join('');
 
-      let plantsHTML = data.plants.map(p => `
-        <div class="organism-item">
-          <span class="organism-icon">${p.icon}</span>
-          <span class="organism-name">${p.name}</span>
-          ${p.note ? `<span class="organism-note">${p.note}</span>` : ''}
-        </div>
-      `).join('');
-
-      let animalsHTML = data.animals.map(a => `
-        <div class="organism-item">
-          <span class="organism-icon">${a.icon}</span>
-          <span class="organism-name">${a.name}</span>
-          ${a.note ? `<span class="organism-note">${a.note}</span>` : ''}
+      const organismItem = (kind, list) => list.map((o, i) => `
+        <div class="organism-item" data-slot="organism-${key}-${kind}-${i}" tabindex="0">
+          <span class="organism-icon">${o.icon}</span>
+          <span class="organism-name">${o.name}</span>
+          ${o.note ? `<span class="organism-note">${o.note}</span>` : ''}
+          <button class="slot-remove" data-slot-remove="organism-${key}-${kind}-${i}" title="Remove photo">✕</button>
         </div>
       `).join('');
 
       container.innerHTML = `
-        <div class="habitat-scene ${data.sceneClass}">
+        <div class="habitat-scene ${data.sceneClass}" data-slot="scene-${key}" tabindex="0">
+          <div class="scene-photo" data-slot-photo="scene-${key}"></div>
           <div class="scene-emojis">${sceneEmojis}</div>
+          <button class="slot-remove" data-slot-remove="scene-${key}" title="Remove photo">✕</button>
         </div>
         <div class="habitat-name">${data.name}</div>
         <div class="habitat-tagline">${data.tagline}</div>
@@ -2248,11 +2420,11 @@
         <div class="organisms-split">
           <div class="organism-group">
             <div class="organism-group-title">🌿 Plants</div>
-            <div class="organism-list">${plantsHTML}</div>
+            <div class="organism-list">${organismItem('plants', data.plants)}</div>
           </div>
           <div class="organism-group">
             <div class="organism-group-title">🐾 Animals</div>
-            <div class="organism-list">${animalsHTML}</div>
+            <div class="organism-list">${organismItem('animals', data.animals)}</div>
           </div>
         </div>
       `;
@@ -2261,6 +2433,9 @@
       document.querySelectorAll('.habitat-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.habitat === key);
       });
+
+      // Let the photo-slot module hydrate any cached photos on the newly-rendered slots
+      document.dispatchEvent(new CustomEvent('photo-slots:rehydrate'));
     }
 
     document.querySelectorAll('.habitat-tab').forEach(tab => {
@@ -2468,6 +2643,255 @@
       });
     });
 
+  </script>
+
+  <!-- ============================================================
+       PHOTO SLOTS — FIREBASE (Auth + Firestore)
+       ============================================================
+       SETUP (one-time):
+       1. Create a Firebase project at https://console.firebase.google.com
+       2. Enable: Authentication → Sign-in method → Google
+       3. Enable: Firestore Database (production mode)
+       4. Copy your web app config into FIREBASE_CONFIG below.
+       5. Apply these Firestore security rules (only chungzhikai@gmail.com can write):
+
+          rules_version = '2';
+          service cloud.firestore {
+            match /databases/{database}/documents {
+              match /photos/{slotId} {
+                allow read: if true;
+                allow write: if request.auth != null
+                             && request.auth.token.email == 'chungzhikai@gmail.com';
+              }
+            }
+          }
+
+       6. Add your deployed hostname to Authentication → Settings → Authorized domains.
+       ============================================================ -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import {
+      getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // ⚠️ REPLACE THESE PLACEHOLDERS with your Firebase web app config.
+    const FIREBASE_CONFIG = {
+      apiKey:            "REPLACE_ME_API_KEY",
+      authDomain:        "REPLACE_ME.firebaseapp.com",
+      projectId:         "REPLACE_ME_PROJECT_ID",
+      storageBucket:     "REPLACE_ME.appspot.com",
+      messagingSenderId: "REPLACE_ME_SENDER_ID",
+      appId:             "REPLACE_ME_APP_ID"
+    };
+    const ADMIN_EMAIL = 'chungzhikai@gmail.com';
+
+    const authBtn = document.getElementById('authBtn');
+    const authLabel = document.getElementById('authLabel');
+
+    const isConfigured = !FIREBASE_CONFIG.apiKey.startsWith('REPLACE_ME');
+    if (!isConfigured) {
+      authLabel.textContent = 'Config needed';
+      authBtn.title = 'Fill in FIREBASE_CONFIG in index.html (see comment above this script).';
+      authBtn.disabled = true;
+      authBtn.style.opacity = '0.6';
+      authBtn.style.cursor = 'not-allowed';
+    }
+
+    // Photo cache — keyed by slotId. Populated by onSnapshot, consumed on every render.
+    const photoCache = new Map();
+    let isAdmin = false;
+
+    function applySlot(slotEl, dataUrl) {
+      if (!slotEl) return;
+      const isScene = slotEl.classList.contains('habitat-scene');
+      const removeBtn = slotEl.querySelector('.slot-remove');
+
+      if (isScene) {
+        const photoEl = slotEl.querySelector('[data-slot-photo]');
+        if (dataUrl) {
+          photoEl.style.backgroundImage = `url("${dataUrl}")`;
+          // Hide emojis when a real photo is set
+          const emojis = slotEl.querySelector('.scene-emojis');
+          if (emojis) emojis.style.opacity = '0';
+          if (removeBtn) removeBtn.dataset.hasPhoto = '1';
+        } else {
+          photoEl.style.backgroundImage = '';
+          const emojis = slotEl.querySelector('.scene-emojis');
+          if (emojis) emojis.style.opacity = '';
+          if (removeBtn) removeBtn.dataset.hasPhoto = '';
+        }
+      } else {
+        const icon = slotEl.querySelector('.organism-icon');
+        if (!icon) return;
+        if (dataUrl) {
+          icon.innerHTML = `<img src="${dataUrl}" alt="">`;
+          if (removeBtn) removeBtn.dataset.hasPhoto = '1';
+        } else {
+          // Restore the original emoji stored in a data attribute (first time we saw it)
+          if (icon.dataset.emoji) icon.textContent = icon.dataset.emoji;
+          if (removeBtn) removeBtn.dataset.hasPhoto = '';
+        }
+      }
+    }
+
+    function hydrateAllSlots() {
+      document.querySelectorAll('[data-slot]').forEach(slotEl => {
+        const icon = slotEl.querySelector('.organism-icon');
+        if (icon && !icon.dataset.emoji && !icon.querySelector('img')) {
+          icon.dataset.emoji = icon.textContent.trim();
+        }
+        const url = photoCache.get(slotEl.dataset.slot);
+        applySlot(slotEl, url || null);
+      });
+    }
+
+    document.addEventListener('photo-slots:rehydrate', hydrateAllSlots);
+
+    async function compressImage(blob, maxW = 1400, quality = 0.82) {
+      const bmp = await createImageBitmap(blob);
+      const scale = Math.min(1, maxW / bmp.width);
+      const w = Math.round(bmp.width * scale);
+      const h = Math.round(bmp.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(bmp, 0, 0, w, h);
+      const out = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+      return await new Promise(res => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.readAsDataURL(out);
+      });
+    }
+
+    // Boot Firebase only if configured
+    let db = null;
+    if (isConfigured) {
+      const app = initializeApp(FIREBASE_CONFIG);
+      const auth = getAuth(app);
+      db = getFirestore(app);
+      const provider = new GoogleAuthProvider();
+
+      authBtn.addEventListener('click', async () => {
+        if (auth.currentUser) {
+          await signOut(auth);
+        } else {
+          try {
+            await signInWithPopup(auth, provider);
+          } catch (e) {
+            console.error('[photo-slots] sign-in failed', e);
+            alert('Sign-in failed: ' + (e.message || e.code));
+          }
+        }
+      });
+
+      onAuthStateChanged(auth, user => {
+        isAdmin = !!user && user.email === ADMIN_EMAIL;
+        document.body.classList.toggle('admin-mode', isAdmin);
+        if (user) {
+          authLabel.textContent = isAdmin ? 'Admin' : 'Not admin';
+          authBtn.classList.toggle('is-admin', isAdmin);
+          authBtn.title = `${user.email} — click to sign out`;
+        } else {
+          authLabel.textContent = 'Sign in';
+          authBtn.classList.remove('is-admin');
+          authBtn.title = 'Sign in with Google (admin only)';
+        }
+      });
+
+      // Real-time photo sync for everyone (no auth required to read)
+      onSnapshot(collection(db, 'photos'), snap => {
+        snap.docChanges().forEach(change => {
+          const id = change.doc.id;
+          if (change.type === 'removed') {
+            photoCache.delete(id);
+          } else {
+            const data = change.doc.data();
+            if (data && data.url) photoCache.set(id, data.url);
+            else photoCache.delete(id);
+          }
+        });
+        hydrateAllSlots();
+      }, err => {
+        console.error('[photo-slots] listener error', err);
+      });
+    }
+
+    async function uploadForSlot(slotEl, blob) {
+      if (!isAdmin || !db) return;
+      const slotId = slotEl.dataset.slot;
+      slotEl.classList.remove('slot-error');
+      slotEl.classList.add('slot-uploading');
+      try {
+        const dataUrl = await compressImage(blob);
+        // Firestore document limit is 1 MiB. Base64 of the compressed JPEG should fit easily.
+        await setDoc(doc(db, 'photos', slotId), {
+          url: dataUrl,
+          updatedAt: serverTimestamp(),
+          updatedBy: ADMIN_EMAIL
+        });
+        // onSnapshot will call hydrateAllSlots; do an optimistic update too
+        photoCache.set(slotId, dataUrl);
+        applySlot(slotEl, dataUrl);
+      } catch (e) {
+        console.error('[photo-slots] upload failed', e);
+        slotEl.classList.add('slot-error');
+        setTimeout(() => slotEl.classList.remove('slot-error'), 2500);
+      } finally {
+        slotEl.classList.remove('slot-uploading');
+      }
+    }
+
+    async function removeSlot(slotId) {
+      if (!isAdmin || !db) return;
+      try {
+        await deleteDoc(doc(db, 'photos', slotId));
+        photoCache.delete(slotId);
+        const slotEl = document.querySelector(`[data-slot="${slotId}"]`);
+        if (slotEl) applySlot(slotEl, null);
+      } catch (e) {
+        console.error('[photo-slots] remove failed', e);
+      }
+    }
+
+    function extractImageBlob(clipboardData) {
+      if (!clipboardData) return null;
+      for (const item of clipboardData.items || []) {
+        if (item.type && item.type.startsWith('image/')) {
+          return item.getAsFile();
+        }
+      }
+      return null;
+    }
+
+    // Delegated paste handler: only fires when an admin has a slot hovered/focused.
+    document.addEventListener('paste', (e) => {
+      if (!isAdmin) return;
+      const slotEl = e.target.closest && e.target.closest('[data-slot]');
+      const focused = document.activeElement && document.activeElement.closest && document.activeElement.closest('[data-slot]');
+      const hovered = document.querySelector('[data-slot]:hover');
+      const target = slotEl || focused || hovered;
+      if (!target) return;
+      const blob = extractImageBlob(e.clipboardData);
+      if (!blob) return;
+      e.preventDefault();
+      uploadForSlot(target, blob);
+    });
+
+    // Delegated click handler for the admin-only remove (✕) button
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest && e.target.closest('[data-slot-remove]');
+      if (!btn || !isAdmin) return;
+      e.stopPropagation();
+      e.preventDefault();
+      removeSlot(btn.dataset.slotRemove);
+    });
+
+    // Initial hydration for whatever is already on screen
+    hydrateAllSlots();
   </script>
 
 </body>
